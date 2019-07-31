@@ -1,0 +1,9 @@
+{
+  "name": "js-events",
+  "version": "1.0.0",
+  "description": "Simple Javascript event emitter",
+  "main": "./dist/eventEmitter.js",
+  "author": "lkmtri",
+  "license": "MIT",
+  "private": false
+}
