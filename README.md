@@ -7,8 +7,44 @@ or
 
 yarn add @suinegmai/js-events
 ```
-### Usage
+### Usage in JavaScript
 
+```typescript
+import EventEmitter from '@suinegmai/js-events'
+
+const ev = EventEmitter()
+
+const onMount = (...args) => console.log('mount: ', ...args)
+const onUpdate = (...args) => console.log('update: ', ...args)
+const onUnmount = (...args) => console.log('unmount: ', ...args)
+
+//Subscribe to 'mount' event, but only trigger the callback once.
+ev.once('mount', onMount)
+
+//Subscribe to 'update' event, the callback is trigger for every 'update' event
+ev.on('update', onUpdate)
+
+//Subscribe to 'unmount' event, but only trigger the callback once.
+ev.once('unmount', onUnmount)
+
+
+ev.emit('mount', 'First mount')
+ev.emit('mount', 'Second mount')
+ev.emit('update', { state: 1 })
+ev.emit('update', { state: 2 })
+ev.emit('unmount', 0)
+
+//Unsubscribe onUpdate
+ev.off('update', onUpdate)
+
+//Console output
+mount: First mount
+update: { state: 1 }
+update: { state: 2 }
+unmount: 0
+```
+
+### Usage in TypeScript
 ```typescript
 import EventEmitter from '@suinegmai/js-events'
 
@@ -20,7 +56,7 @@ type Event = {
   unmount: number
 }
 
-const ev = eventEmitter<Event>()
+const ev = EventEmitter<Event>()
 
 const onMount = (...args) => console.log('mount: ', ...args)
 const onUpdate = (...args) => console.log('update: ', ...args)
