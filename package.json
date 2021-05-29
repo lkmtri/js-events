@@ -1,6 +1,6 @@
 {
-  "name": "js-events",
-  "version": "1.0.0",
+  "name": "@suinegmai/js-events",
+  "version": "1.0.1",
   "description": "Simple Javascript event emitter",
   "main": "./dist/index.js",
   "module": "./dist/esm/index.js",
