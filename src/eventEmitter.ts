@@ -13,14 +13,14 @@ function eventEmitter<EventType extends Record<string, unknown>>() {
     }
   };
 
-  return {
+  const self = {
     on<T extends keyof EventType>(
       event: T,
       callback: CallbackFn<EventType[T]>
     ) {
       ensure(list, event);
       list.get(event)!.push(callback);
-      return this;
+      return self;
     },
 
     off<T extends keyof EventType>(
@@ -32,7 +32,7 @@ function eventEmitter<EventType extends Record<string, unknown>>() {
         event,
         list.get(event)!.filter((cb) => cb !== callback)
       );
-      return this;
+      return self;
     },
 
     once<T extends keyof EventType>(
@@ -41,27 +41,30 @@ function eventEmitter<EventType extends Record<string, unknown>>() {
     ) {
       ensure(onceList, event);
       onceList.get(event)!.push(callback);
-      return this;
+      return self;
     },
 
     emit<T extends keyof EventType>(event: T, args: EventType[T]) {
-      if (!list.has(event) && !onceList.has(event)) return false;
+      if (!list.has(event) && !onceList.has(event)) return self;
 
       if (list.has(event)) {
         for (const callback of list.get(event)!) {
-          setTimeout(() => callback.call(this, args), 0);
+          setTimeout(() => callback.call(self, args), 0);
         }
       }
 
       if (onceList.has(event)) {
         for (const callback of onceList.get(event)!) {
-          setTimeout(() => callback.call(this, args), 0);
+          setTimeout(() => callback.call(self, args), 0);
         }
         onceList.delete(event);
       }
-      return true;
+
+      return self;
     },
-  };
+  }
+
+  return self;
 }
 
 export default eventEmitter;
