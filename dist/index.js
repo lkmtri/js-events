@@ -18,28 +18,26 @@ function eventEmitter() {
     }
   };
 
-  return {
+  var self = {
     on: function on(event, callback) {
       ensure(list, event);
       list.get(event).push(callback);
-      return this;
+      return self;
     },
     off: function off(event, callback) {
       ensure(list, event);
       list.set(event, list.get(event).filter(function (cb) {
         return cb !== callback;
       }));
-      return this;
+      return self;
     },
     once: function once(event, callback) {
       ensure(onceList, event);
       onceList.get(event).push(callback);
-      return this;
+      return self;
     },
     emit: function emit(event, args) {
-      var _this = this;
-
-      if (!list.has(event) && !onceList.has(event)) return false;
+      if (!list.has(event) && !onceList.has(event)) return self;
 
       if (list.has(event)) {
         var _iterator = _createForOfIteratorHelper(list.get(event)),
@@ -49,7 +47,7 @@ function eventEmitter() {
           var _loop = function _loop() {
             var callback = _step.value;
             setTimeout(function () {
-              return callback.call(_this, args);
+              return callback.call(self, args);
             }, 0);
           };
 
@@ -71,7 +69,7 @@ function eventEmitter() {
           var _loop2 = function _loop2() {
             var callback = _step2.value;
             setTimeout(function () {
-              return callback.call(_this, args);
+              return callback.call(self, args);
             }, 0);
           };
 
@@ -87,9 +85,10 @@ function eventEmitter() {
         onceList["delete"](event);
       }
 
-      return true;
+      return self;
     }
   };
+  return self;
 }
 
 exports.default = eventEmitter;

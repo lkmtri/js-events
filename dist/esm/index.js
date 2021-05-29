@@ -6,39 +6,40 @@ function eventEmitter() {
       map.set(event, []);
     }
   };
-  return {
+  const self = {
     on(event, callback) {
       ensure(list, event);
       list.get(event).push(callback);
-      return this;
+      return self;
     },
     off(event, callback) {
       ensure(list, event);
       list.set(event, list.get(event).filter((cb) => cb !== callback));
-      return this;
+      return self;
     },
     once(event, callback) {
       ensure(onceList, event);
       onceList.get(event).push(callback);
-      return this;
+      return self;
     },
     emit(event, args) {
       if (!list.has(event) && !onceList.has(event))
-        return false;
+        return self;
       if (list.has(event)) {
         for (const callback of list.get(event)) {
-          setTimeout(() => callback.call(this, args), 0);
+          setTimeout(() => callback.call(self, args), 0);
         }
       }
       if (onceList.has(event)) {
         for (const callback of onceList.get(event)) {
-          setTimeout(() => callback.call(this, args), 0);
+          setTimeout(() => callback.call(self, args), 0);
         }
         onceList.delete(event);
       }
-      return true;
+      return self;
     }
   };
+  return self;
 }
 
 export default eventEmitter;
